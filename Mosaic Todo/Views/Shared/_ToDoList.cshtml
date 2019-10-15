@@ -1,0 +1,40 @@
+﻿@using System.Activities.Statements
+@model IEnumerable<Mosaic_Todo.Models.ToDo>
+
+
+<table class="table table-secondary table-sm">
+    @foreach (var item in Model)
+    {
+        <tr class="d-flex">
+            <td class="col-1">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                }
+                @Html.CheckBoxFor(modelItem => item.Completed, new { id = item.Id, @class = "toggle", data_url = Url.Action("Complete", "ToDoes") })
+            </td>
+            <td class="col-9"
+                @if(item.Completed)
+                {
+                    @Html.Raw("style='text-decoration: line-through'")
+                }
+                >
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td class="col-2">
+                @using (Html.BeginForm("Delete", "ToDoes"))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-actions no-color">
+                        @Html.Hidden("id", item.Id, new { @id = "id" })
+                        @Html.HiddenFor(modelItem => item.Id)
+                        <input type="submit" value="Delete" class="btn btn-outline-secondary" />
+                    </div>
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+
+

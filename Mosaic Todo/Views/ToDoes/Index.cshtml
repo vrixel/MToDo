@@ -1,0 +1,40 @@
+﻿@using Mosaic_Todo.Models
+@model IEnumerable<Mosaic_Todo.Models.ToDo>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>To Do List</h2>
+@foreach (var toDo in (ViewBag.toDoes))
+{
+    @toDo.Description
+}
+<p>
+    @Html.Partial("_Create", new ToDo())
+</p>
+
+@Html.Partial("_ToDoList")
+
+@section scripts {
+    <script>
+        $(function () {
+            $('.toggle').change(function () {
+                var self = $(this);
+                var url = self.data('url');
+                var id = self.attr('id');
+                var completed = self.prop('checked');
+                var __RequestVerificationToken = $('input[name="__RequestVerificationToken"]', $('#__AjaxAntiForgeryForm')).val();
+
+                $.ajax({
+                    url: url,
+                    data: { id, completed, __RequestVerificationToken },
+                    type: 'POST',
+                    success: function (response) {
+                        window.location.reload();
+                    }
+                });
+            });
+        });
+    </script>
+}
